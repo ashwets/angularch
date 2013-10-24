@@ -53,7 +53,7 @@ TODO: описать get-параметры для запросов коллек
 
 ```text
 GET /campaigns/12345
-~~~
+~
 {
   "status": "success",
   "data": {
@@ -71,7 +71,7 @@ PUT /campaigns/12345/copy
 {
   "new_name": "Copy of 12345 campaign"
 }
-~~~
+~
 {
   "status": "success",
   "data": {
@@ -89,7 +89,7 @@ PUT /campaigns/12345/copy
 
 ```text
 DELETE /campaigns/123467
-~~~
+~
 {
   "status": "error",
   "message": "Campaign not found"
@@ -100,7 +100,7 @@ DELETE /campaigns/123467
 
 ```text
 GET /campaigns?per_page=2
-~~~
+~
 {
   "status": "success",
   "data": [
@@ -175,10 +175,10 @@ GET /campaigns?per_page=2
 После этого можно описывать ресурсы.
 
 ```javascript
-angular.module('campaignResource', ['ngResource'])
+angular.module('campaigns.resources', ['ngResource'])
     .factory('Campaign', ['$resource',
         function ($resource) {
-             return $resource('api/campaigns/:id');
+             return $resource('api/campaigns/:id', {id: '@id'});
         }
     ]);
 ```
