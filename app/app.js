@@ -3,11 +3,11 @@
 angular.module('app', [
         'ngCookies',
         'ngSanitize',
-        'ngRoute',
         'ngMockE2E',
+        'ui.router',
         'campaigns.controller'
     ])
-    .config(function ($provide, $routeProvider, $httpProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
         var JSON_START = /^\s*(\[|\{[^\{])/,
             JSON_END = /[\}\]]\s*$/;
 
@@ -23,14 +23,14 @@ angular.module('app', [
             return angular.toJson(data);
         };*/
 
-        $routeProvider
-            .when('/', {
+        $stateProvider
+            .state('campaigns.list', {
+                url: '/',
                 templateUrl: '/scripts/modules/campaigns/templates/list.tpl.html',
                 controller: 'CampaignController'
-            })
-            .otherwise({
-                redirectTo: '/'
             });
+
+        $urlRouterProvider.otherwise("/");
     })
 
     .run(function($httpBackend) {
