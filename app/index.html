@@ -32,7 +32,11 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ui-view></div>
+    <div class="container">
+        <div ui-view="navbar" class="navbar"></div>
+
+        <div ui-view="main"></div>
+    </div>
 
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
@@ -63,8 +67,10 @@
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="app.js"></script>
-    <script src="scripts/modules/campaigns/controller.js"></script>
+    <script src="scripts/modules/campaigns/controllers.js"></script>
     <script src="scripts/modules/campaigns/resources.js"></script>
+
+    <script src="scripts/modules/common/controllers.js"></script>
     <!-- endbuild -->
 </body>
 </html>
