@@ -5,3 +5,4 @@ dist
 .idea
 app/bower_components
 *.log
+rules.js
