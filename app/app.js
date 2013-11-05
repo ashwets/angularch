@@ -65,12 +65,12 @@ angular.module('app', [
                 123: {
                     "id": 123,
                     "name": "Elephant store",
-                    "start_date": "2013-10-10"
+                    "startDate": "2013-10-10"
                 },
                 456: {
                     "id": 456,
                     "name": "Magic mushrooms",
-                    "start_date": "2013-09-10"
+                    "startDate": "2013-09-10"
                 }
             },
             campaignReturn = function(method, url, data) {
@@ -87,6 +87,32 @@ angular.module('app', [
                 "status": "success",
                 "data": _.values(mockCampaigns),
                 "total": 20
+            })
+        );
+        $httpBackend.whenGET('/api/campaigns/validation').respond(
+            angular.toJson({
+                "status": "success",
+                "data": {
+                  "name": [
+                    {
+                      "type": "Required",
+                      "message": "Задайте имя кампании"
+                    },
+                    {
+                      "type": "Length",
+                      "min": 10,
+                      "max": 20,
+                      "minMessage": "Имя кампании должно быть длиннее {{ limit }} символов",
+                      "maxMessage": "Имя кампании должно быть короче {{ limit }} символов"
+                    }
+                  ],
+                  "startDate": [
+                    {
+                      "type": "Required",
+                      "message": "Задайте дату начала кампании"
+                    }
+                  ]
+                }
             })
         );
         $httpBackend.whenGET(/\/api\/campaigns\/[0-9]*/).respond(campaignReturn);

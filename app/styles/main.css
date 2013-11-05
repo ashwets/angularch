@@ -1,2 +1,10 @@
 body {
 }
+
+input.ng-valid {
+    color: green;
+}
+
+input.ng-invalid {
+    color: red;
+}
