@@ -95,7 +95,7 @@ angular.module('app', [
                 "data": {
                   "name": [
                     {
-                      "type": "Required",
+                      "type": "NotBlank",
                       "message": "Задайте имя кампании"
                     },
                     {
@@ -108,7 +108,7 @@ angular.module('app', [
                   ],
                   "startDate": [
                     {
-                      "type": "Required",
+                      "type": "NotBlank",
                       "message": "Задайте дату начала кампании"
                     }
                   ]
