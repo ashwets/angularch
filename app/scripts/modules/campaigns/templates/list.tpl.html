@@ -1,7 +1,9 @@
 <div>
   <h1>Campaigns list</h1>
   <ul>
-      <li ng-repeat="c in campaigns">{{c.name}}</li>
+      <li ng-repeat="c in campaigns">
+      	<a ui-sref="campaignsEdit({campaignId: c.id})">{{c.name}}</a>
+      </li>
   </ul>
 </div>
 

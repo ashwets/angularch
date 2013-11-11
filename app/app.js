@@ -54,12 +54,18 @@ angular.module('app', [
                 url: '/campaigns/create',
                 templateUrl: '/scripts/modules/campaigns/templates/create.tpl.html',
                 controller: 'CampaignCreateController'
+            })
+            .state('campaignsEdit', {
+                parent: 'mainNavigable',
+                url: '/campaigns/:campaignId',
+                templateUrl: '/scripts/modules/campaigns/templates/create.tpl.html',
+                controller: 'CampaignEditController'
             });
 
         $urlRouterProvider.otherwise("/");
     })
 
-    .run(function($httpBackend) {
+    .run(function($httpBackend, $log) {
 
         var mockCampaigns = {
                 123: {
@@ -74,12 +80,13 @@ angular.module('app', [
                 }
             },
             campaignReturn = function(method, url, data) {
-                var matches = url.match(/[0-9]*/),
+                var matches = url.match(/[0-9]+/),
                     id = matches[0];
-                return angular.toJson({
+                var res = angular.toJson({
                     "status": "success",
                     "data": mockCampaigns[id]
                 });
+                return [200, res];
             };
 
         $httpBackend.whenGET('/api/campaigns').respond(
@@ -115,8 +122,8 @@ angular.module('app', [
                 }
             })
         );
-        $httpBackend.whenGET(/\/api\/campaigns\/[0-9]*/).respond(campaignReturn);
-        $httpBackend.whenPOST(/\/api\/campaigns\/[0-9]*/).respond(campaignReturn);
+        $httpBackend.whenGET(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
+        $httpBackend.whenPOST(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
 
         $httpBackend.whenGET(/.*\.html/).passThrough();
     });

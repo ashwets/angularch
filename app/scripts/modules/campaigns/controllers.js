@@ -2,22 +2,35 @@
 
 angular.module('campaigns.controllers', ['common.validation', 'campaigns.resources'])
     .controller('CampaignListController', function ($scope, $log, Campaign) {
-        $scope.campaigns = Campaign.query(function () {
-            $log.debug($scope.campaigns);
+        return Campaign.query({}, function (campaigns) {
+            $log.debug(campaigns);
+            $scope.campaigns = campaigns;
         });
-
-        return $scope.campaigns;
     })
 
     .controller('CampaignCreateController', function ($scope, $log, Campaign) {
-        $scope.validation = Campaign.get({id: 'validation'}, function () {
-            $log.debug($scope.validation);
-        });
         $scope.campaign = new Campaign({
             'name': 'New campaign',
             'startDate': '2014-01-01'
         });
 
-        return $scope.validation;
+        return Campaign.get({id: 'validation'}, function (validation) {
+            $log.debug(validation);
+            $scope.validation = validation;
+        });
+    })
+
+    .controller('CampaignEditController', function ($scope, $stateParams, $q, $log, Campaign) {
+        $log.debug($stateParams.campaignId);
+        var p1 = Campaign.get({id: $stateParams.campaignId}, function (campaign) {
+                $log.debug(campaign);
+                $scope.campaign = campaign;
+            }),
+
+            p2 = Campaign.get({id: 'validation'}, function (validation) {
+                $log.debug(validation);
+                $scope.validation = validation;
+            });
+        return $q.all([p1, p2]);
     });
 

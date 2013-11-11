@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('campaigns.resources', ['ngResource'])
-    .factory('Campaign', ['$resource',
+angular.module('campaigns.resources', ['common.resources'])
+    .factory('Campaign', ['appResource',
         function ($resource) {
-             return $resource('/api/campaigns/:id', {id: '@id'});
+             return $resource('campaigns');
         }
     ]);
 
