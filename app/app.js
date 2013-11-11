@@ -43,6 +43,12 @@ angular.module('app', [
                 templateUrl: '/scripts/modules/common/templates/home.tpl.html',
                 controller: 'HomeController'
             })
+            .state('signin', {
+                parent: 'mainNavigable',
+                url: '/signin',
+                templateUrl: '/scripts/modules/common/templates/signin.tpl.html',
+                controller: 'SigninController'
+            })
             .state('campaignsList', {
                 parent: 'mainNavigable',
                 url: '/campaigns',
@@ -79,13 +85,15 @@ angular.module('app', [
                     "startDate": "2013-09-10"
                 }
             },
-            campaignReturn = function(method, url, data) {
+            campaignReturn = function(method, url, data, headers) {
                 var matches = url.match(/[0-9]+/),
-                    id = matches[0];
-                var res = angular.toJson({
-                    "status": "success",
-                    "data": mockCampaigns[id]
-                });
+                    id = matches[0],
+                    res = angular.toJson({
+                        "status": "success",
+                        "data": mockCampaigns[id]
+                    });
+                $log.debug(headers);
+
                 return [200, res];
             };
 
@@ -124,6 +132,20 @@ angular.module('app', [
         );
         $httpBackend.whenGET(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
         $httpBackend.whenPOST(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
+
+        $httpBackend.whenPOST('/api/auth').respond(
+            function (method, url, data) {
+                $log.debug('Auth with ' + angular.toJson(data));
+                return [200, angular.toJson({
+                    status: "success",
+                    data: {
+                        token: "asd", 
+                        expires: "2013-11-22T10:11:12"
+                    }
+                })];
+            }
+            
+        );
 
         $httpBackend.whenGET(/.*\.html/).passThrough();
     });
