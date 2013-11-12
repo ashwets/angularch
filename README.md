@@ -652,7 +652,68 @@ TODO: e2e?
 
 ### Основные виджеты ###
 
-TODO: описать виджет для всех типов полей (см. первый раздел) + пример кастомного
+
+#### Строковые значения ####
+
+Используется обычный input типа text, либо textarea.
+
+```html
+<input type="text" id="name" name="name" ng-model='campaign.name' app-validator='name' app-validator-message-position='right' placeholder="Name"/>
+<textarea name="comment" id="comment" ng-model="campaign.comment"></textarea>
+```
+
+#### Целые числа, числа с фиксированной точностью ####
+
+Используется [autoNumeric](http://www.decorplanit.com/plugin/). В пакетах директивы нет, но она очень просто добавляется самостоятельно.
+
+Пример: https://gist.github.com/kwokhou/5964296
+
+```html
+<input type="text" id="budget" ng-model="campaign.budget" placeholder="Budget" app-numeric="{vMin: 3, vMax: 10}"/>
+```
+
+#### Дата, дата и время ####
+
+Используется [jQuery UI Datepicker](http://jqueryui.com/datepicker) через [angular-ui ui-date](https://github.com/angular-ui/ui-date).
+
+```html
+<input type="text" id="start-date" name="start-date" ng-model="campaign.startDate" placeholder="Start date" ui-date="{dateFormat:'dd.mm.yy'}"/>
+```
+
+Для выбора времени можно использовать дополнение [jQuery Timepicker Addon](https://github.com/trentrichardson/jQuery-Timepicker-Addon).
+
+TODO: для Timepicker нужна отдельная директива?
+
+#### Флаг (булевское значение) ####
+
+Для флага используется обычный чекбокс.
+
+```html
+<input type="checkbox" id="network" ng-model="campaign.network" placeholder="Network">
+```
+
+#### Выбор из заданного набора значений ####
+
+Для выбора отлично походит [select2](http://ivaynberg.github.io/select2/). Он может выбирать как одно значения из списка,
+так и множество с сохранением порядка.
+
+В ангуляр интегрируется с помощью [angular-ui ui-select2](https://github.com/angular-ui/ui-select2).
+
+```html
+<input ng-model="campaign.regions" ui-select2="{data: regions, formatSelection: regionFormat, formatResult: regionFormat}" data-placeholder="Select region">
+```
+
+```
+$scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];
+$scope.regionFormat = function format(item) { return item.name; };
+```
+
+
+#### Отображение таблиц, пагинация ####
+
+TODO
+
+TODO: пример кастомного виджета?
 
 
 ### Сборка ###

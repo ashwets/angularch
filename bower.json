@@ -11,7 +11,10 @@
         "angular-resource": "~1.2.0-rc.3",
         "angular-cookies": "~1.2.0-rc.3",
         "angular-sanitize": "~1.2.0-rc.3",
-        "angular-ui-router": "~0.2.0"
+        "angular-ui-router": "~0.2.0",
+        "angular-ui-date": "latest",
+        "angular-ui-select2": "latest",
+        "autoNumeric": "latest"
     },
     "devDependencies": {
         "angular-mocks": "~1.2.0-rc.3",

@@ -5,6 +5,9 @@ angular.module('app', [
         'ngSanitize',
         'ngMockE2E',
         'ui.router',
+        'ui.date',
+        'ui.select2',
+        'common.directives',
         'common.controllers',
         'campaigns.controllers'
     ])

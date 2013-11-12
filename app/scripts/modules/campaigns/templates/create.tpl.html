@@ -1,7 +1,45 @@
-<h1>Create new campaign</h1>
-<form>
-    <label>Name: <input type="text" name="name" ng-model='campaign.name' app-validator='name' app-validator-message-position='right'/></label>
-    <label>Start date: <input type="date" name="start_date"/></label>
-    <input type="submit"/>
-    <a ui-sref="campaignsList">Return</a>
+<h1>Campaign editor</h1>
+<form class="form-horizontal">
+    <div class="control-group">
+        <label class="control-label" for="name">Name</label>
+        <div class="controls">
+            <input type="text" id="name" ng-model='campaign.name' app-validator='name' app-validator-message-position='right' placeholder="Name"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="start-date">Start date</label>
+        <div class="controls">
+            <input type="text" id="start-date" ng-model="campaign.startDate" placeholder="Start date" ui-date="{dateFormat:'dd.mm.yy'}"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Budget</label>
+        <div class="controls">
+            <input type="text" id="budget" ng-model="campaign.budget" placeholder="Budget" app-numeric="{vMin: 3, vMax: 10}"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Regions</label>
+        <div class="controls">
+            <input ng-model="campaign.regions" ui-select2="{data: regions, formatSelection: regionFormat, formatResult: regionFormat}" data-placeholder="Select region">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">Network</label>
+        <div class="controls">
+            <input type="checkbox" id="network" ng-model="campaign.network" placeholder="Network">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="comment">Comment</label>
+        <div class="controls">
+            <textarea name="comment" id="comment" ng-model="campaign.comment"></textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="submit"/>
+            <a ui-sref="campaignsList">Return</a>
+        </div>
+    </div>
 </form>

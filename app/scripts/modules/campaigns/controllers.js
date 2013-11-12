@@ -10,9 +10,12 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
 
     .controller('CampaignCreateController', function ($scope, $log, Campaign) {
         $scope.campaign = new Campaign({
-            'name': 'New campaign',
-            'startDate': '2014-01-01'
+            'name': '',
+            'startDate': new Date()
         });
+
+        $scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];
+        $scope.regionFormat = function format(item) { return item.name; };
 
         return Campaign.get({id: 'validation'}, function (validation) {
             $log.debug(validation);
@@ -31,6 +34,10 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
                 $log.debug(validation);
                 $scope.validation = validation;
             });
+
+        $scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];
+        $scope.regionFormat = function format(item) { return item.name; };
+
         return $q.all([p1, p2]);
     });
 

@@ -8,3 +8,7 @@ input.ng-valid {
 input.ng-invalid {
     color: red;
 }
+
+.select2-container {
+    width: 220px;
+}
