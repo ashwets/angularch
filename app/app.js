@@ -15,7 +15,7 @@ angular.module('app', [
         var JSON_START = /^\s*(\[|\{[^\{])/,
             JSON_END = /[\}\]]\s*$/;
 
-        $httpProvider.defaults.transformResponse = function(data, headersGetter) {
+        $httpProvider.defaults.transformResponse = function(data) {
             if (JSON_START.test(data) && JSON_END.test(data)) {
                 var json = angular.fromJson(data);
                 return json.data;
@@ -111,25 +111,25 @@ angular.module('app', [
             angular.toJson({
                 "status": "success",
                 "data": {
-                  "name": [
-                    {
-                      "type": "NotBlank",
-                      "message": "Задайте имя кампании"
-                    },
-                    {
-                      "type": "Length",
-                      "min": 10,
-                      "max": 20,
-                      "minMessage": "Имя кампании должно быть длиннее {{ limit }} символов",
-                      "maxMessage": "Имя кампании должно быть короче {{ limit }} символов"
-                    }
-                  ],
-                  "startDate": [
-                    {
-                      "type": "NotBlank",
-                      "message": "Задайте дату начала кампании"
-                    }
-                  ]
+                    "name": [
+                        {
+                            "type": "NotBlank",
+                            "message": "Задайте имя кампании"
+                        },
+                        {
+                            "type": "Length",
+                            "min": 10,
+                            "max": 20,
+                            "minMessage": "Имя кампании должно быть длиннее {{ limit }} символов",
+                            "maxMessage": "Имя кампании должно быть короче {{ limit }} символов"
+                        }
+                    ],
+                    "startDate": [
+                        {
+                            "type": "NotBlank",
+                            "message": "Задайте дату начала кампании"
+                        }
+                    ]
                 }
             })
         );
@@ -142,7 +142,7 @@ angular.module('app', [
                 return [200, angular.toJson({
                     status: "success",
                     data: {
-                        token: "asd", 
+                        token: "asd",
                         expires: "2013-11-22T10:11:12"
                     }
                 })];

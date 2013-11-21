@@ -19,8 +19,9 @@ angular.module('common.directives', [])
                     // Helper method to update autoNumeric with new value.
                     var updateElement = function (element, newVal) {
                         // Only set value if value is numeric
-                        if ($.isNumeric(newVal))
+                        if ($.isNumeric(newVal)) {
                             element.autoNumeric('set', newVal);
+                        }
                     };
 
                     // Initialize element as autoNumeric with options.
@@ -29,7 +30,7 @@ angular.module('common.directives', [])
                     // if element has controller, wire it (only for <input type="text" />)
                     if (controller && isTextInput) {
                         // watch for external changes to model and re-render element
-                        scope.$watch(tAttrs.ngModel, function (current, old) {
+                        scope.$watch(tAttrs.ngModel, function () {
                             controller.$render();
                         });
                         // render element as autoNumeric
@@ -38,7 +39,7 @@ angular.module('common.directives', [])
                         };
 
                         // Detect changes on element and update model.
-                        elm.on('change', function (e) {
+                        elm.on('change', function () {
                             scope.$apply(function () {
                                 controller.$setViewValue(elm.autoNumeric('get'));
                             });
@@ -53,7 +54,7 @@ angular.module('common.directives', [])
                             });
                         }
                     }
-                }
+                };
             } // compile
         };
     }]);

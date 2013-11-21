@@ -780,7 +780,7 @@ messageformat довольно хорошая и мощная штука, под
 
 В принципе, при необходимости, можно встроить messageformat поверх gettext.
 
-#### Отображение ваюты ####
+#### Отображение валюты ####
 
 TODO
 
@@ -791,8 +791,58 @@ TODO
 
 ### Автоинспекция кода ###
 
-TODO: описать необходимые правила jshint и способы его запуска
+Инспекция кода производится с помощью jshint.
 
+Файл конфигурации jshint называется .jshintrc и должен быть примерно такого содержания (только без комментариев).
+
+```
+{
+  "browser": true,  # разрешить использование глобальных переменных браузера, таких как document или FileReader
+  "esnext": false,  # не разрешать использование ECMAScript 6
+  "bitwise": true,  # не разрешать бинарные операции (как & или |)
+  "camelcase": true,  # все переменные должны быть вида camelCase или UPPER_CASE
+  "curly": true,  # не разрешать использование блоков без {}
+  "eqeqeq": true,  # не разрешать == и != (только === и !==)
+  "immed": true,  # inline функции должны браться в скобки, напр., x = (function () { return 1; })()
+  "indent": 4,  # отступ должен быть 4 пробела
+  "latedef": true,  # запрещает использование переменных до их определения
+  "newcap": true,  # конструкторы должны начинаться с большой буквы, напр., new Campaign()
+  "noarg": true,  # запрещает использование arguments.caller и arguments.callee
+  "quotmark": "true",  # использование одинарных и двойных кавычек должно бысть согласованным
+  "undef": true,  # запрещает использование неопределенных переменных
+  "unused": true,  # не должно быть неиспользуемых переменных
+  "globalstrict": true,  # все файлы должны быть в strict режиме
+  "trailing": true,  # запрещает пробелы в конце строк
+  "predef": ["angular", "$", "_"]  # разрешает глобальное использование переменных angular, jQuery, underscore
+}
+```
+
+Подробнее об опциях jshint можно почитать на [офсайте](http://www.jshint.com/docs/options/).
+
+Для того, чтобы jshint не проверял сторонние компоненты, необходим файл .jshintignore, который
+будет содержать примерно такой список.
+
+```
+./app/bower_components
+./node_modules
+```
+
+Запуск jshint производится командой
+```
+jshint ./
+```
+
+Желательно эту команду выполнять при сборках на сервере CI. При наличии ошибок, считать сборку неудачной.
+
+Также, например, для Jenkins есть плагин [Violations](https://wiki.jenkins-ci.org/display/JENKINS/Violations),
+который позволяет смотреть в интерфейсе ошибки jshint.
+Для него необходимо генерировать результат в специальном виде.
+
+```
+jshint --jslint-reporter ./ > jslint.xml
+```
+
+Кроме того полезным будет ресурс [JSLint Error Explanations](http://jslinterrors.com) для понимания специфичных ошибок.
 
 ### Сборка ###
 
@@ -814,7 +864,8 @@ sudo add-apt-repository ppa:chris-lea/node.js
 Кроме nodejs также глобально необходимо установить bower, grunt, jshint.
 
 ```
-sudo aptitde install nodejs
+sudo aptitude update
+sudo aptitude install nodejs
 sudo npm install -g bower grunt-cli jshint
 ```
 

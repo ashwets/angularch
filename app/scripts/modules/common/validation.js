@@ -16,7 +16,7 @@ angular.module('common.validation', [])
 
         return {
             NotBlank: function (value, params) {
-                if (!(value + "").length) {
+                if (!(value + '').length) {
                     return invalidRes(params.message);
                 }
                 return validRes;
@@ -24,7 +24,7 @@ angular.module('common.validation', [])
             Length: function (value, params) {
                 var len = value.length;
 
-                if (params.min === params.max && len != params.min) {
+                if (params.min === params.max && len !== params.min) {
                     return invalidRes(params.exactMessage, {limit: params.min, value: value});
                 } else if (params.min && len < params.min) {
                     return invalidRes(params.minMessage, {limit: params.min, value: value});
@@ -33,7 +33,7 @@ angular.module('common.validation', [])
                 }
                 return validRes;
             }
-        }
+        };
     })
 
     .directive('appValidator', function ($log, appValidators) {
@@ -70,5 +70,5 @@ angular.module('common.validation', [])
                     }
                 });
             }
-        }
+        };
     });
