@@ -1,32 +1,20 @@
 'use strict';
 
 angular.module('app', [
+        'mock',
         'ngCookies',
         'ngSanitize',
         'ngMockE2E',
         'ui.router',
         'ui.date',
         'ui.select2',
+        'ui.notify',
         'angularMoment',
         'common.directives',
         'common.controllers',
         'campaigns.controllers'
     ])
-    .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
-        var JSON_START = /^\s*(\[|\{[^\{])/,
-            JSON_END = /[\}\]]\s*$/;
-
-        $httpProvider.defaults.transformResponse = function(data) {
-            if (JSON_START.test(data) && JSON_END.test(data)) {
-                var json = angular.fromJson(data);
-                return json.data;
-            }
-            return data;
-        };
-
-        /*$httpProvider.defaults.transformRequest = function(data, headersGetter) {
-            return angular.toJson(data);
-        };*/
+    .config(function ($stateProvider, $urlRouterProvider) {
 
         $stateProvider
             .state('mainNavigable', {
@@ -73,83 +61,4 @@ angular.module('app', [
             });
 
         $urlRouterProvider.otherwise("/");
-    })
-
-    .run(function($httpBackend, $log) {
-
-        var mockCampaigns = {
-                123: {
-                    "id": 123,
-                    "name": "Elephant store",
-                    "startDate": "2013-10-10"
-                },
-                456: {
-                    "id": 456,
-                    "name": "Magic mushrooms",
-                    "startDate": "2013-09-10"
-                }
-            },
-            campaignReturn = function(method, url, data, headers) {
-                var matches = url.match(/[0-9]+/),
-                    id = matches[0],
-                    res = angular.toJson({
-                        "status": "success",
-                        "data": mockCampaigns[id]
-                    });
-                $log.debug(headers);
-
-                return [200, res];
-            };
-
-        $httpBackend.whenGET('/api/campaigns').respond(
-            angular.toJson({
-                "status": "success",
-                "data": _.values(mockCampaigns),
-                "total": 20
-            })
-        );
-        $httpBackend.whenGET('/api/campaigns/validation').respond(
-            angular.toJson({
-                "status": "success",
-                "data": {
-                    "name": [
-                        {
-                            "type": "NotBlank",
-                            "message": "Задайте имя кампании"
-                        },
-                        {
-                            "type": "Length",
-                            "min": 10,
-                            "max": 20,
-                            "minMessage": "Имя кампании должно быть длиннее {{ limit }} символов",
-                            "maxMessage": "Имя кампании должно быть короче {{ limit }} символов"
-                        }
-                    ],
-                    "startDate": [
-                        {
-                            "type": "NotBlank",
-                            "message": "Задайте дату начала кампании"
-                        }
-                    ]
-                }
-            })
-        );
-        $httpBackend.whenGET(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
-        $httpBackend.whenPOST(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
-
-        $httpBackend.whenPOST('/api/auth').respond(
-            function (method, url, data) {
-                $log.debug('Auth with ' + angular.toJson(data));
-                return [200, angular.toJson({
-                    status: "success",
-                    data: {
-                        token: "asd",
-                        expires: "2013-11-22T10:11:12"
-                    }
-                })];
-            }
-            
-        );
-
-        $httpBackend.whenGET(/.*\.html/).passThrough();
     });

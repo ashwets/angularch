@@ -8,7 +8,9 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
         });
     })
 
-    .controller('CampaignCreateController', function ($scope, $log, Campaign, CampaignValidation) {
+    .controller('CampaignCreateController', function (
+            $scope, $log, $state, notificationService, appErrorsHandler, Campaign, CampaignValidation
+        ) {
         $scope.campaign = new Campaign({
             'name': '',
             'startDate': new Date()
@@ -16,6 +18,19 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
 
         $scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];
         $scope.regionFormat = function format(item) { return item.name; };
+
+        $scope.onSubmit = function () {
+            $scope.errors = {};
+            $scope.campaign.$save(
+                function () {
+                    notificationService.success('Campaign is successfully added');
+                    $state.go('campaignsList');
+                },
+                function (response) {
+                    appErrorsHandler.handle(response, $scope);
+                }
+            );
+        };
 
         return CampaignValidation.get({}, function (validation) {
             $log.debug(validation);

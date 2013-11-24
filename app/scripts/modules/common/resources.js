@@ -34,8 +34,9 @@ angular.module('common.resources', [])
                 params = angular.extend(defaultParams, params);
                 return send('GET', url, params).then(
                     function (response) {
-                        var result = [];
-                        angular.forEach(response.data, function (v, k) {
+                        var data = angular.fromJson(response.data),
+                            result = [];
+                        angular.forEach(data.data, function (v, k) {
                             result[k] = new Resource(v);
                         });
                         success(result);
@@ -51,8 +52,9 @@ angular.module('common.resources', [])
                 $log.debug('get ' + itemUrl);
                 return send('GET', itemUrl).then(
                     function (response) {
+                        var data = angular.fromJson(response.data);
                         $log.debug('got ' + itemUrl);
-                        success(new Resource(response.data));
+                        success(new Resource(data.data));
                     },
                     function (response) {
                         error(response);
@@ -63,8 +65,9 @@ angular.module('common.resources', [])
             Resource.save = function (data, success, error) {
                 return send('POST', url, defaultParams, data).then(
                     function (response) {
-                        //$log.debug('POST return ' + angular.toJson(response.data))
-                        var res = new Resource(response.data);
+                        var data = angular.fromJson(response.data);
+                        $log.debug('POST return ', response.data);
+                        var res = new Resource(data.data);
                         success(res);
                     },
                     function (response) {

@@ -1,5 +1,5 @@
 <h1>Campaign editor</h1>
-<form class="form-horizontal">
+<form class="form-horizontal" ng-submit="onSubmit()">
     <div class="control-group">
         <label class="control-label" for="name">Name</label>
         <div class="controls">
@@ -38,8 +38,8 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            <input type="submit"/>
-            <a ui-sref="campaignsList">Return</a>
+            <input class="btn btn-success" type="submit"/>
+            <a class="btn btn-warning" ui-sref="campaignsList">Cancel</a>
         </div>
     </div>
 </form>

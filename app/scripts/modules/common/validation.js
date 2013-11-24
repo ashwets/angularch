@@ -37,12 +37,19 @@ angular.module('common.validation', [])
     })
 
     .directive('appValidator', function ($log, appValidators) {
+        var showMessage = function (element, message, attributes) {
+            element.popover({
+                content: message,
+                placement: attributes.appValidatorMessagePosition || 'right',
+                trigger: 'manual'
+            }).popover('show');
+        };
+
         return {
             require: 'ngModel',
             restrict: 'A',
 
             link: function(scope, element, attributes, ngModelCtrl) {
-                $log.debug(attributes);
                 element.bind('blur', function () {
                     var value = ngModelCtrl.$modelValue;
                     $log.debug(value);
@@ -62,13 +69,32 @@ angular.module('common.validation', [])
                     ngModelCtrl.$setValidity('validator', isValid);
                     element.popover('destroy');
                     if (message) {
-                        element.popover({
-                            content: message,
-                            placement: attributes.appValidatorMessagePosition || 'right',
-                            trigger: 'manual'
-                        }).popover('show');
+                        showMessage(element, message, attributes);
                     }
                 });
+
+                scope.$watch('errors', function (newValue) {
+                    $log.debug('Errors changed', newValue);
+
+                    if (!newValue || !newValue[attributes.appValidator]) {
+                        return;
+                    }
+                    showMessage(element, newValue[attributes.appValidator], attributes);
+                });
+            }
+        };
+    })
+
+    .factory('appErrorsHandler', function ($log, notificationService) {
+        return {
+            handle: function (response, $scope) {
+                if (response.status === 400) {
+                    $log.debug('POST errors', response.data.errors);
+                    $scope.errors = angular.fromJson(response.data.errors);
+                    notificationService.error('Please, correct values');
+                } else {
+                    notificationService.error('Something terrible happened');
+                }
             }
         };
     });

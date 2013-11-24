@@ -17,7 +17,8 @@
         "angular-gettext": "~0.2.0",
         "autoNumeric": "latest",
         "moment": "latest",
-        "angular-moment": "latest"
+        "angular-moment": "latest",
+        "angular-pines-notify": "latest"
     },
     "devDependencies": {
         "angular-mocks": "~1.2.0-rc.3",
