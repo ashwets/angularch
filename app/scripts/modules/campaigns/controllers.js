@@ -8,7 +8,7 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
         });
     })
 
-    .controller('CampaignCreateController', function ($scope, $log, Campaign) {
+    .controller('CampaignCreateController', function ($scope, $log, Campaign, CampaignValidation) {
         $scope.campaign = new Campaign({
             'name': '',
             'startDate': new Date()
@@ -17,20 +17,20 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
         $scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];
         $scope.regionFormat = function format(item) { return item.name; };
 
-        return Campaign.get({id: 'validation'}, function (validation) {
+        return CampaignValidation.get({}, function (validation) {
             $log.debug(validation);
             $scope.validation = validation;
         });
     })
 
-    .controller('CampaignEditController', function ($scope, $stateParams, $q, $log, Campaign) {
+    .controller('CampaignEditController', function ($scope, $stateParams, $q, $log, Campaign, CampaignValidation) {
         $log.debug($stateParams.campaignId);
         var p1 = Campaign.get({id: $stateParams.campaignId}, function (campaign) {
                 $log.debug(campaign);
                 $scope.campaign = campaign;
             }),
 
-            p2 = Campaign.get({id: 'validation'}, function (validation) {
+            p2 = CampaignValidation.get({}, function (validation) {
                 $log.debug(validation);
                 $scope.validation = validation;
             });

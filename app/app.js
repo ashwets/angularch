@@ -7,6 +7,7 @@ angular.module('app', [
         'ui.router',
         'ui.date',
         'ui.select2',
+        'angularMoment',
         'common.directives',
         'common.controllers',
         'campaigns.controllers'

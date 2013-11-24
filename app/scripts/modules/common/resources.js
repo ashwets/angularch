@@ -2,7 +2,7 @@
 
 angular.module('common.resources', [])
     .factory('appResource', function ($http, $log, $cookies) {
-        return function (resourcePath) {
+        return function (resourcePath, constructor) {
             var url = '/api/' + resourcePath,
                 defaultParams = {},
 
@@ -27,39 +27,54 @@ angular.module('common.resources', [])
                 },
 
                 Resource = function (data) {
-                    return angular.extend(this, data);
+                    return constructor ? constructor(this, data) : angular.extend(this, data);
                 };
 
             Resource.query = function (params, success, error) {
                 params = angular.extend(defaultParams, params);
-                return send('GET', url, params).then(function (response) {
-                    var result = [];
-                    angular.forEach(response.data, function (v, k) {
-                        result[k] = new Resource(v);
-                    });
-                    success(result);
-                });
+                return send('GET', url, params).then(
+                    function (response) {
+                        var result = [];
+                        angular.forEach(response.data, function (v, k) {
+                            result[k] = new Resource(v);
+                        });
+                        success(result);
+                    },
+                    function (response) {
+                        error(response);
+                    }
+                );
             };
 
             Resource.get = function (params, success, error) {
-                var itemUrl = url + '/' + params.id;
+                var itemUrl = params.id ? url + '/' + params.id : url;
                 $log.debug('get ' + itemUrl);
-                return send('GET', itemUrl).then(function (response) {
-                    $log.debug('got ' + itemUrl);
-                    success(response.data);
-                });
+                return send('GET', itemUrl).then(
+                    function (response) {
+                        $log.debug('got ' + itemUrl);
+                        success(new Resource(response.data));
+                    },
+                    function (response) {
+                        error(response);
+                    }
+                );
             };
 
-            Resource.save = function (data, success) {
-                return send('POST', url, defaultParams, data).then(function (response) {
-                    //$log.debug('POST return ' + angular.toJson(response.data))
-                    var res = new Resource(response.data);
-                    success(res);
-                });
+            Resource.save = function (data, success, error) {
+                return send('POST', url, defaultParams, data).then(
+                    function (response) {
+                        //$log.debug('POST return ' + angular.toJson(response.data))
+                        var res = new Resource(response.data);
+                        success(res);
+                    },
+                    function (response) {
+                        error(response);
+                    }
+                );
             };
 
-            Resource.prototype.$save = function (success) {
-                return Resource.save(this, success);
+            Resource.prototype.$save = function (success, error) {
+                return Resource.save(this, success, error);
             };
 
             Resource.remove = function () {
