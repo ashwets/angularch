@@ -63,10 +63,13 @@ angular.module('common.resources', [])
             };
 
             Resource.save = function (data, success, error) {
-                return send('POST', url, defaultParams, data).then(
+                var id = getId(data),
+                    method = id ? 'PUT' : 'POST',
+                    methodUrl = id ? url + '/' + id : url;
+                return send(method, methodUrl, defaultParams, data).then(
                     function (response) {
                         var data = angular.fromJson(response.data);
-                        $log.debug('POST return ', response.data);
+                        $log.debug('save return ', response.data);
                         var res = new Resource(data.data);
                         success(res);
                     },

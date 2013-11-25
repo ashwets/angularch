@@ -15,7 +15,7 @@ angular.module('mock', [])
                     "startDate": "2013-09-10"
                 }
             },
-            campaignReturn = function (method, url, data, headers) {
+            campaignGet = function (method, url, data, headers) {
                 var matches = url.match(/[0-9]+/),
                     id = matches[0],
                     res = angular.toJson({
@@ -26,12 +26,7 @@ angular.module('mock', [])
 
                 return [200, res];
             },
-            campaignAdd = function (method, url, data) {
-                $log.debug('POSTED ', data);
-                var nextId = _.max(_.map(_.keys(mockCampaigns), function(v) { return parseInt(v); })) + 1;
-
-                data = angular.fromJson(data);
-
+            campaignValidate = function (data) {
                 if (!data.name) {
                     return [400, angular.toJson({
                         "status": "error",
@@ -40,11 +35,40 @@ angular.module('mock', [])
                         }
                     })];
                 }
+                return false;
+            },
+            campaignAdd = function (method, url, data) {
+                $log.debug('POSTED ', data);
+                data = angular.fromJson(data);
+
+                var nextId = _.max(_.map(_.keys(mockCampaigns), function(v) { return parseInt(v, 10); })) + 1,
+                    notValid = campaignValidate(data);
+
+                if (notValid) {
+                    return notValid;
+                }
 
                 data.id = nextId;
                 mockCampaigns[nextId] = data;
                 $log.debug('Created campaign with id ' + nextId);
                 return [201, angular.toJson({
+                    "status": "success",
+                    "data": data
+                })];
+            },
+            campaignUpdate = function (method, url, data) {
+                data = angular.fromJson(data);
+
+                var matches = url.match(/[0-9]+/),
+                    id = matches[0],
+                    notValid = campaignValidate(data);
+                if (notValid) {
+                    return notValid;
+                }
+
+                mockCampaigns[id] = data;
+                $log.debug('Updated campaign with id ' + id);
+                return [200, angular.toJson({
                     "status": "success",
                     "data": data
                 })];
@@ -85,9 +109,9 @@ angular.module('mock', [])
                 }
             })
         );
-        $httpBackend.whenGET(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
+        $httpBackend.whenGET(/\/api\/campaigns\/[0-9]+/).respond(campaignGet);
         $httpBackend.whenPOST(/\/api\/campaigns/).respond(campaignAdd);
-        $httpBackend.whenPOST(/\/api\/campaigns\/[0-9]+/).respond(campaignReturn);
+        $httpBackend.whenPUT(/\/api\/campaigns\/[0-9]+/).respond(campaignUpdate);
 
         $httpBackend.whenPOST('/api/auth').respond(
             function (method, url, data) {

@@ -8,9 +8,30 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
         });
     })
 
-    .controller('CampaignCreateController', function (
-            $scope, $log, $state, notificationService, appErrorsHandler, Campaign, CampaignValidation
-        ) {
+    .factory('CampaignSaver', function ($state, $log, CampaignValidation, notificationService, appErrorsHandler) {
+        return {
+            getValidation: function (scope) {
+                return CampaignValidation.get({}, function (validation) {
+                    $log.debug('Using validation', validation);
+                    scope.validation = validation;
+                });
+            },
+            save: function (scope) {
+                appErrorsHandler.clear(scope);
+                scope.campaign.$save(
+                    function () {
+                        notificationService.success('Campaign is successfully saved');
+                        $state.go('campaignsList');
+                    },
+                    function (response) {
+                        appErrorsHandler.handle(response, scope);
+                    }
+                );
+            }
+        };
+    })
+
+    .controller('CampaignCreateController', function ($scope, $log, $state, Campaign, CampaignSaver) {
         $scope.campaign = new Campaign({
             'name': '',
             'startDate': new Date()
@@ -19,40 +40,23 @@ angular.module('campaigns.controllers', ['common.validation', 'campaigns.resourc
         $scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];
         $scope.regionFormat = function format(item) { return item.name; };
 
-        $scope.onSubmit = function () {
-            $scope.errors = {};
-            $scope.campaign.$save(
-                function () {
-                    notificationService.success('Campaign is successfully added');
-                    $state.go('campaignsList');
-                },
-                function (response) {
-                    appErrorsHandler.handle(response, $scope);
-                }
-            );
-        };
+        $scope.onSubmit = function () { CampaignSaver.save($scope); };
 
-        return CampaignValidation.get({}, function (validation) {
-            $log.debug(validation);
-            $scope.validation = validation;
-        });
+        return CampaignSaver.getValidation($scope);
     })
 
-    .controller('CampaignEditController', function ($scope, $stateParams, $q, $log, Campaign, CampaignValidation) {
-        $log.debug($stateParams.campaignId);
-        var p1 = Campaign.get({id: $stateParams.campaignId}, function (campaign) {
-                $log.debug(campaign);
-                $scope.campaign = campaign;
-            }),
-
-            p2 = CampaignValidation.get({}, function (validation) {
-                $log.debug(validation);
-                $scope.validation = validation;
-            });
-
+    .controller('CampaignEditController', function ($scope, $stateParams, $q, $log, Campaign, CampaignSaver) {
         $scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];
         $scope.regionFormat = function format(item) { return item.name; };
 
-        return $q.all([p1, p2]);
+        $scope.onSubmit = function () { CampaignSaver.save($scope); };
+
+        return $q.all([
+            Campaign.get({id: $stateParams.campaignId}, function (campaign) {
+                $log.debug(campaign);
+                $scope.campaign = campaign;
+            }),
+            CampaignSaver.getValidation($scope)
+        ]);
     });
 

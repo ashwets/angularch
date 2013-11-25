@@ -87,10 +87,13 @@ angular.module('common.validation', [])
 
     .factory('appErrorsHandler', function ($log, notificationService) {
         return {
-            handle: function (response, $scope) {
+            clear: function (scope) {
+                scope.errors = {};
+            },
+            handle: function (response, scope) {
                 if (response.status === 400) {
                     $log.debug('POST errors', response.data.errors);
-                    $scope.errors = angular.fromJson(response.data.errors);
+                    scope.errors = angular.fromJson(response.data.errors);
                     notificationService.error('Please, correct values');
                 } else {
                     notificationService.error('Something terrible happened');
