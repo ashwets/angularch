@@ -17,6 +17,13 @@ angular.module('mock', [])
                     "startDate": "2013-09-10",
                     "budget": "200000.00",
                     "network": false
+                },
+                789: {
+                    "id": 789,
+                    "name": "Kitty cat",
+                    "startDate": "2013-09-11",
+                    "budget": "300000.00",
+                    "network": false
                 }
             },
             campaignGet = function (method, url, data, headers) {
@@ -78,12 +85,26 @@ angular.module('mock', [])
                 })];
             };
 
-        $httpBackend.whenGET('/api/campaigns').respond(function () {
+        $httpBackend.whenGET(/\/api\/campaigns\??(.*)?/).respond(function (method, url) {
+            var matches = url.match(/\/api\/campaigns\??(.*)?/),
+                queryString = matches[1],
+                pairs = queryString.split('&'),
+                params = {},
+                start = 0;
+
+            angular.forEach(pairs, function (v) {
+                var s = v.split('=');
+                params[s[0]] = s[1];
+            });
+            start = params._page * params._per_page;
+
+            $log.debug(url, queryString, params);
+
             var values = _.values(mockCampaigns);
             return [200, angular.toJson({
                 "status": "success",
-                "data": values,
-                "total": mockCampaigns.length
+                "data": values.slice(start, start + params._per_page),
+                "total": values.length
             })];
         });
 

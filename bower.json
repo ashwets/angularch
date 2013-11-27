@@ -14,6 +14,7 @@
         "angular-ui-router": "~0.2.0",
         "angular-ui-date": "latest",
         "angular-ui-select2": "latest",
+        "angular-ui-bootstrap": "latest",
         "angular-gettext": "~0.2.0",
         "autoNumeric": "latest",
         "moment": "latest",

@@ -2,10 +2,30 @@
 
 angular.module('campaigns.controllers', ['lib.validation', 'campaigns.resources'])
     .controller('CampaignListController', function ($scope, $log, Campaign) {
-        return Campaign.query({}, function (campaigns) {
-            $log.debug(campaigns);
-            $scope.campaigns = campaigns;
-        });
+        $scope.currentPage = 0;
+        $scope.itemsPerPage = 2;
+
+        var queryCampaigns = function () {
+            $log.debug('page', $scope.currentPage);
+            return Campaign.query(
+                {
+                    _page: $scope.currentPage,
+                    _per_page: $scope.itemsPerPage
+                },
+                function (campaigns, total) {
+                    $log.debug(campaigns, total);
+                    $scope.campaigns = campaigns;
+                    $scope.campaignsTotal = total;
+                }
+            );
+        };
+
+        $scope.onPageChange = function (page) {
+            $scope.currentPage = page;
+            queryCampaigns();
+        };
+
+        return queryCampaigns();
     })
 
     .factory('CampaignSaver', function ($state, $log, CampaignValidation, notificationService, appErrorsHandler) {

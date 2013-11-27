@@ -93,7 +93,9 @@ angular.module('lib.validation', [])
             handle: function (response, scope) {
                 if (response.status === 400) {
                     $log.debug('POST errors', response.data.errors);
-                    scope.errors = angular.fromJson(response.data.errors);
+                    if (scope) {
+                        scope.errors = angular.fromJson(response.data.errors);
+                    }
                     notificationService.error('Please, correct values');
                 } else {
                     notificationService.error('Something terrible happened');

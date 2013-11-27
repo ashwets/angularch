@@ -20,7 +20,8 @@
         </tr>
     </tbody>
 </table>
-<pagination total-items="totalItems" page="currentPage" max-size="maxSize" class="pagination-small" boundary-links="true" rotate="false" num-pages="numPages"></pagination>
+<app-pagination total-items="campaignsTotal" page="currentPage+1" items-per-page="itemsPerPage" max-size="5"
+                class="pagination-small" boundary-links="true" rotate="false" on-select-page="onPageChange(page-1)"/>
 
 
 <a ui-sref="campaignsCreate">Create new</a>
