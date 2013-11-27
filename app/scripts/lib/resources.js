@@ -28,7 +28,7 @@ angular.module('lib.resources', [])
                 },
 
                 errorDefaultFn = function (response) {
-                    appErrorsHandler(response, null);
+                    appErrorsHandler.handle(response);
                 },
 
                 Resource = function (data) {
@@ -61,7 +61,7 @@ angular.module('lib.resources', [])
                 return send('GET', itemUrl).then(
                     function (response) {
                         var data = angular.fromJson(response.data);
-                        $log.debug('got ' + itemUrl);
+                        $log.debug('got ' + itemUrl, response);
                         success(new Resource(data.data));
                     },
                     function (response) {

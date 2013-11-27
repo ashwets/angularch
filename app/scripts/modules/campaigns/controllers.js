@@ -10,7 +10,7 @@ angular.module('campaigns.controllers', ['lib.validation', 'campaigns.resources'
             return Campaign.query(
                 {
                     _page: $scope.currentPage,
-                    _per_page: $scope.itemsPerPage
+                    _perPage: $scope.itemsPerPage
                 },
                 function (campaigns, total) {
                     $log.debug(campaigns, total);
@@ -37,14 +37,10 @@ angular.module('campaigns.controllers', ['lib.validation', 'campaigns.resources'
                 });
             },
             save: function (scope) {
-                appErrorsHandler.clear(scope);
                 scope.campaign.$save(
                     function () {
                         notificationService.success('Campaign is successfully saved');
                         $state.go('campaignsList');
-                    },
-                    function (response) {
-                        appErrorsHandler.handle(response, scope);
                     }
                 );
             }
@@ -54,7 +50,8 @@ angular.module('campaigns.controllers', ['lib.validation', 'campaigns.resources'
     .controller('CampaignCreateController', function ($scope, $log, $state, Campaign, CampaignSaver) {
         $scope.campaign = new Campaign({
             'name': '',
-            'startDate': new Date()
+            'startDate': new Date(),
+            'budget': 0
         });
 
         $scope.regions = [{id: 0, name: 'Moscow'}, {id: 1, name: 'St. Petersburg'}];

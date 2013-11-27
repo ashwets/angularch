@@ -1,12 +1,16 @@
 
 <h1>Campaigns list</h1>
+<div class="control-group pull-right">
+    <a ui-sref="campaignsCreate" class="btn btn-success"><i class="icon-plus icon-white"></i> Create new</a>
+</div>
+<div class="clearfix"></div>
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
             <th>#</th>
             <th>Name</th>
             <th>Start Date</th>
-            <th>Budget, <app-currency-sign /></th>
+            <th>Budget, <app-currency-sign/></th>
             <th>Network</th>
         </tr>
     </thead>
@@ -21,7 +25,4 @@
     </tbody>
 </table>
 <app-pagination total-items="campaignsTotal" page="currentPage+1" items-per-page="itemsPerPage" max-size="5"
-                class="pagination-small" boundary-links="true" rotate="false" on-select-page="onPageChange(page-1)"/>
-
-
-<a ui-sref="campaignsCreate">Create new</a>
+                class="pagination-small" boundary-links="true" rotate="false" on-select-page="onPageChange(page-1)"></app-pagination>

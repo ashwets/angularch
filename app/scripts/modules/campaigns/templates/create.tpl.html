@@ -9,31 +9,31 @@
     <div class="control-group">
         <label class="control-label" for="start-date">Start date</label>
         <div class="controls">
-            <input type="text" id="start-date" ng-model="campaign.startDate" placeholder="Start date" ui-date="{dateFormat:'dd.mm.yy'}"/>
+            <input type="text" id="start-date" ng-model="campaign.startDate" app-validator='startDate' placeholder="Start date" ui-date="{dateFormat:'dd.mm.yy'}"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">Budget</label>
         <div class="controls">
-            <input type="text" id="budget" ng-model="campaign.budget" placeholder="Budget" app-numeric="{vMin: 0, vMax: 1000000}"/>
+            <input type="text" id="budget" ng-model="campaign.budget" app-validator='budget' placeholder="Budget" app-numeric="{vMin: 0, vMax: 1000000}"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">Regions</label>
         <div class="controls">
-            <input ng-model="campaign.regions" ui-select2="{data: regions, formatSelection: regionFormat, formatResult: regionFormat}" data-placeholder="Select region">
+            <input ng-model="campaign.regions" ui-select2="{data: regions, formatSelection: regionFormat, formatResult: regionFormat}" app-validator='regions' data-placeholder="Select region">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">Network</label>
         <div class="controls">
-            <input type="checkbox" id="network" ng-model="campaign.network" placeholder="Network">
+            <input type="checkbox" id="network" ng-model="campaign.network" app-validator="network" placeholder="Network">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label" for="comment">Comment</label>
         <div class="controls">
-            <textarea name="comment" id="comment" ng-model="campaign.comment"></textarea>
+            <textarea name="comment" id="comment" ng-model="campaign.comment" app-validator="comment"></textarea>
         </div>
     </div>
     <div class="control-group">

@@ -4,31 +4,45 @@ angular.module('mock', [])
 	.run(function($httpBackend, $log) {
 
         var mockCampaigns = {
-                123: {
-                    "id": 123,
+                111: {
+                    "id": 111,
                     "name": "Elephant store",
                     "startDate": "2013-10-10",
                     "budget": "100000.00",
                     "network": true
                 },
-                456: {
-                    "id": 456,
+                222: {
+                    "id": 222,
                     "name": "Magic mushrooms",
                     "startDate": "2013-09-10",
                     "budget": "200000.00",
                     "network": false
                 },
-                789: {
-                    "id": 789,
+                333: {
+                    "id": 333,
                     "name": "Kitty cat",
                     "startDate": "2013-09-11",
                     "budget": "300000.00",
                     "network": false
+                },
+                444: {
+                    "id": 444,
+                    "name": "Acme",
+                    "startDate": "2015-10-22",
+                    "budget": "44444.44",
+                    "network": true
+                },
+                555: {
+                    "id": 555,
+                    "name": "Super duper puper",
+                    "startDate": "2013-01-01",
+                    "budget": "123456.78",
+                    "network": true
                 }
             },
             campaignGet = function (method, url, data, headers) {
                 var matches = url.match(/[0-9]+/),
-                    id = matches[0],
+                    id = parseInt(matches[0]),
                     res = angular.toJson({
                         "status": "success",
                         "data": mockCampaigns[id]
@@ -38,12 +52,18 @@ angular.module('mock', [])
                 return [200, res];
             },
             campaignValidate = function (data) {
+                var errors = {};
+
                 if (!data.name) {
+                    errors.name = "Имя кампании обязательно";
+                }
+                if (data.budget < 1000) {
+                    errors.budget = "Минимальный бюджет кампании - 1000 рублей"
+                }
+                if (!_.isEmpty(errors)) {
                     return [400, angular.toJson({
                         "status": "error",
-                        "errors": {
-                            "name": "This field is required"
-                        }
+                        "errors": errors
                     })];
                 }
                 return false;
@@ -85,7 +105,7 @@ angular.module('mock', [])
                 })];
             };
 
-        $httpBackend.whenGET(/\/api\/campaigns\??(.*)?/).respond(function (method, url) {
+        $httpBackend.whenGET(/\/api\/campaigns(\?.*)?$/).respond(function (method, url) {
             var matches = url.match(/\/api\/campaigns\??(.*)?/),
                 queryString = matches[1],
                 pairs = queryString.split('&'),
@@ -96,14 +116,14 @@ angular.module('mock', [])
                 var s = v.split('=');
                 params[s[0]] = s[1];
             });
-            start = params._page * params._per_page;
+            start = parseInt(params._page) * parseInt(params._perPage);
 
-            $log.debug(url, queryString, params);
+            $log.debug(url, queryString, params, start, start + params._perPage);
 
             var values = _.values(mockCampaigns);
             return [200, angular.toJson({
                 "status": "success",
-                "data": values.slice(start, start + params._per_page),
+                "data": values.slice(start, start + parseInt(params._perPage)),
                 "total": values.length
             })];
         });

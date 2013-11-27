@@ -16,7 +16,7 @@
         "angular-ui-select2": "latest",
         "angular-ui-bootstrap": "latest",
         "angular-gettext": "~0.2.0",
-        "autoNumeric": "latest",
+        "autoNumeric": "1.9.16",
         "moment": "latest",
         "angular-moment": "latest",
         "angular-pines-notify": "latest"

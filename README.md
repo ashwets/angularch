@@ -224,49 +224,20 @@ GET /campaigns?_=1385307613654
 `http://localhost/api/campaigns`.
 
 Все методы принимают на вход две функции: функцию обработки успешного результата и функцию обработки ошибки.
+Однако, функцию обработки задавать необязательно, в случае ее отсутствия вызовется стандартный хендлер из сервиса `appErrorsHandler`. Подробнее об этом сервисе в разделе о валидации.
 Например, код контроллера формы кампании, отвечающий за сохранение будет выглядеть так.
 
 ```javascript
     $scope.onSubmit = function () {
-        appErrorsHandler.clear($scope);  // очистка сообщений валидации.
         $scope.campaign.$save(  // сохранение...
             function () {  // функция обработки успешного результата
                 notificationService.success('Campaign is successfully saved');  // вывод успешного сообщения
                 $state.go('campaignsList');  // переход к списку кампаний
-            },
-            function (response) {  // функция обработки ошибок
-                appErrorsHandler.handle(response, $scope);  // передаем управление общему обработчику ошибок
             }
         );
     };
 ```
-
-Сервис `appErrorsHandler` будет выглядеть примерно так.
-
-```
-    .factory('appErrorsHandler', function ($log, notificationService) {
-        return {
-            clear: function (scope) {
-                scope.errors = {};
-            },
-            handle: function (response, scope) {
-                if (response.status === 400) {  // обработка ошибок валидации
-                    scope.errors = angular.fromJson(response.data.errors);
-                    notificationService.error('Please, correct values');
-                } else if (reponse.status === SOME_OTHER_HTTP_CODE) {  // обработка других ошибок (403, 511, ...)
-                    ...
-                } else {  // обработка неизвестной ошибки (например, 500)
-                    notificationService.error('Something terrible happened');
-                }
-            }
-        };
-    });
-```
-
-Обработанные ошибки валидации сервис помещает в `scope`, где на них подписаны директивы валидации, которые отобразят
-появившиеся ошибки.
-
-TODO: описать использование `query` с параметрами
+Примеры на использование query можно посмотреть в разделе про отображение табличных данных.
 
 
 ### Роутинг ###
@@ -538,7 +509,7 @@ NB: Можно реализовать адаптер, который будет 
 Использование директивы `app-validator` в коде.
 
 ```
-<input type="text" name="name" ng-model='campaign.name' app-validator />
+<input type="text" name="name" ng-model='campaign.name' app-validator='name' />
 ```
 
 Или более кастомизированный вариант:
@@ -600,11 +571,11 @@ NB: Можно реализовать адаптер, который будет 
 Для обработки серверной валидации можно ввести отдельный сервис `appErrorsHandler` примерно такого вида
 
 ```javascript
-    .factory('appErrorsHandler', function ($log, notificationService) {
+    .factory('appErrorsHandler', function ($log, appValidationErrors, notificationService) {
         return {
             handle: function (response, $scope) {
                 if (response.status === 400) {
-                    $scope.errors = angular.fromJson(response.data.errors);
+                    appValidationErrors.setMessages(response.data.errors);
                     notificationService.error('Please, correct values');
                 } else {
                     notificationService.error('Something terrible happened');
@@ -614,16 +585,14 @@ NB: Можно реализовать адаптер, который будет 
     });
 ```
 
-Как видно, этот обработчик в случае кода 400 помещает ошибки в `$scope` и выдает пользователю предупреждение.
-Директива валидации должна быть подписана на `$scope.errors`, поэтому при обнаружении там своей ошибки, она должна ее отобразить.
+Как видно, этот обработчик в случае кода 400 передает ошибки в `appValidationErrors` и выдает пользователю предупреждение.
+Директива валидации должна быть подписана на `appValidationErrors`, поэтому при обнаружении там своей ошибки, она должна ее отобразить.
 
 ```javascript
-    scope.$watch('errors', function (newValue) {
-        if (!newValue || !newValue[attributes.appValidator]) {
-            return;
-        }
-        showMessage(element, newValue[attributes.appValidator], attributes);
-    });
+  appValidationErrors.subscribe(ruleName, function (message) {
+      ngModelCtrl.$setValidity('validator', !!message);
+      showMessage(element, message, attributes);
+  });
 ```
 
 
@@ -832,7 +801,45 @@ $scope.regionFormat = function format(item) { return item.name; };
 
 В контроллер отдается только часть коллекции - текущая страница.
 
-Для переключения между страницами используется пагинация.
+Для переключения между страницами используется пагинация. Пагинация предоставлена `ui.bootstrap.pagination` 
+из пакета (angular-ui-bootstrap)[https://github.com/angular-ui/bootstrap].
+
+Контроллер списка кампаний может выглядеть так.
+
+```javascript
+  .controller('CampaignListController', function ($scope, $log, Campaign) {
+        $scope.currentPage = 0;
+        $scope.itemsPerPage = 2;
+
+        var queryCampaigns = function () {
+            return Campaign.query(
+                {
+                    _page: $scope.currentPage,
+                    _perPage: $scope.itemsPerPage
+                },
+                function (campaigns, total) {
+                    $log.debug(campaigns, total);
+                    $scope.campaigns = campaigns;
+                    $scope.campaignsTotal = total;
+                }
+            );
+        };
+
+        $scope.onPageChange = function (page) {
+            $scope.currentPage = page;
+            queryCampaigns();
+        };
+
+        return queryCampaigns();
+    })
+```
+
+В шаблоне же под таблицей добавляется строчка пагинатора.
+
+```
+<app-pagination total-items="campaignsTotal" page="currentPage+1" items-per-page="itemsPerPage" max-size="5"
+                class="pagination-small" boundary-links="true" rotate="false" on-select-page="onPageChange(page-1)"></app-pagination>
+```
 
 
 

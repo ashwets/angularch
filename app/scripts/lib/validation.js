@@ -36,13 +36,40 @@ angular.module('lib.validation', [])
         };
     })
 
-    .directive('appValidator', function ($log, appValidators) {
+    .factory('appValidationErrors', function ($log) {
+        var subscribers = {},
+            setMessage = function (fieldName, message) {
+                _.each(subscribers[fieldName], function (subscriber) {
+                    subscriber(message, fieldName);
+                });
+            };
+        return {
+            setMessage: setMessage,
+            setMessages: function (messages) {
+                $log.debug('subscribers', subscribers);
+                _.each(messages, function (v, k) {
+                    setMessage(k, v);
+                });
+            },
+            subscribe: function (fieldName, subscriber) {
+                if (!subscribers[fieldName]) {
+                    subscribers[fieldName] = []
+                }
+                subscribers[fieldName].push(subscriber);
+            }
+        };
+    })
+
+    .directive('appValidator', function ($log, appValidators, appValidationErrors) {
         var showMessage = function (element, message, attributes) {
-            element.popover({
-                content: message,
-                placement: attributes.appValidatorMessagePosition || 'right',
-                trigger: 'manual'
-            }).popover('show');
+            element.popover('destroy');
+            if (message) {
+                element.popover({
+                    content: message,
+                    placement: attributes.appValidatorMessagePosition || 'right',
+                    trigger: 'manual'
+                }).popover('show');
+            }
         };
 
         return {
@@ -50,10 +77,9 @@ angular.module('lib.validation', [])
             restrict: 'A',
 
             link: function(scope, element, attributes, ngModelCtrl) {
+                var ruleName = attributes.appValidator;
                 element.bind('blur', function () {
-                    var value = ngModelCtrl.$modelValue;
-                    $log.debug(value);
-                    var ruleName = attributes.appValidator || ngModelCtrl.$name,
+                    var value = ngModelCtrl.$modelValue,
                         validators = scope.validation[ruleName],
                         isValid = true,
                         message = '';
@@ -67,35 +93,23 @@ angular.module('lib.validation', [])
                         return isValid;
                     });
                     ngModelCtrl.$setValidity('validator', isValid);
-                    element.popover('destroy');
-                    if (message) {
-                        showMessage(element, message, attributes);
-                    }
+                    showMessage(element, message, attributes);
                 });
 
-                scope.$watch('errors', function (newValue) {
-                    $log.debug('Errors changed', newValue);
-
-                    if (!newValue || !newValue[attributes.appValidator]) {
-                        return;
-                    }
-                    showMessage(element, newValue[attributes.appValidator], attributes);
+                appValidationErrors.subscribe(ruleName, function (message) {
+                    ngModelCtrl.$setValidity('validator', !!message);
+                    showMessage(element, message, attributes);
                 });
             }
         };
     })
 
-    .factory('appErrorsHandler', function ($log, notificationService) {
+    .factory('appErrorsHandler', function ($log, notificationService, appValidationErrors) {
         return {
-            clear: function (scope) {
-                scope.errors = {};
-            },
-            handle: function (response, scope) {
+            handle: function (response) {
                 if (response.status === 400) {
                     $log.debug('POST errors', response.data.errors);
-                    if (scope) {
-                        scope.errors = angular.fromJson(response.data.errors);
-                    }
+                    appValidationErrors.setMessages(response.data.errors);
                     notificationService.error('Please, correct values');
                 } else {
                     notificationService.error('Something terrible happened');

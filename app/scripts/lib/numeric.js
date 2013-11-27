@@ -44,7 +44,7 @@ angular.module('lib.numeric', [])
             signPos: function () {
                 return appNumericCurrency[currentCurrency].pos;
             }
-        }
+        };
     })
     .directive('appNumeric', function (appNumericSettings) {
         return {
@@ -91,5 +91,5 @@ angular.module('lib.numeric', [])
             link: function (scope, elm) {
                 elm.replaceWith(appNumericSettings.sign());
             }
-        }
+        };
     });
