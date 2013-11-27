@@ -7,12 +7,16 @@ angular.module('mock', [])
                 123: {
                     "id": 123,
                     "name": "Elephant store",
-                    "startDate": "2013-10-10"
+                    "startDate": "2013-10-10",
+                    "budget": "100000.00",
+                    "network": true
                 },
                 456: {
                     "id": 456,
                     "name": "Magic mushrooms",
-                    "startDate": "2013-09-10"
+                    "startDate": "2013-09-10",
+                    "budget": "200000.00",
+                    "network": false
                 }
             },
             campaignGet = function (method, url, data, headers) {

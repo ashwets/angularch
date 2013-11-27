@@ -215,7 +215,7 @@ GET /campaigns?_=1385307613654
 Описание ресурсов происходит очень просто.
 
 ```javascript
-    .factory('Campaign', function (appResource, appMoment) {
+    .factory('Campaign', function (appResource) {
         return appResource('campaigns');
     }
 ```
@@ -809,7 +809,7 @@ $scope.regionFormat = function format(item) { return item.name; };
 
 #### Отображение таблиц, пагинация ####
 
-TODO: описать [DataTables](http://datatables.net) и [datatables-angular-directive](https://github.com/maktouch/datatables-angular-directive).
+
 
 
 #### Собственный виджет ####
@@ -832,12 +832,13 @@ TODO: описать [DataTables](http://datatables.net) и [datatables-angular-
 
 Для выделения строк, которым необходим перевод, используется директива `translate`. Например.
 
-```
+```html
 <a href="/" translate>Home</a>
 ```
 
 Для множественных форм используются атрибуты `translate-plural` и `translate-n`.
-```
+
+```html
 <span translate translate-n="count" translate-plural="There are {{count}} messages">There is {{count}} message</a>
 ```
 
@@ -850,7 +851,7 @@ TODO: описать [DataTables](http://datatables.net) и [datatables-angular-
 
 Установка языка может происходить в любом месте приложения. Например.
 
-```
+```javascript
 angular.module('myApp').run(function (gettextCatalog) {
     gettextCatalog.currentLanguage = 'ru';
 });
@@ -858,7 +859,7 @@ angular.module('myApp').run(function (gettextCatalog) {
 
 Для перевода строк в контроллерах используется функция gettext. Однако, лучше избегать употребления языкозависимых строк в контроллерах.
 
-```
+```javascript
 angular.module("myApp").controller("helloController", function (gettext) {
     var myString = gettext("Hello");
 });
@@ -878,13 +879,54 @@ messageformat довольно хорошая и мощная штука, под
 
 В принципе, при необходимости, можно встроить messageformat поверх gettext.
 
-#### Отображение валюты ####
+#### Отображение числовых значений и валюты ####
 
-TODO
+Для отображения числовых значений используется та же библиотека, что и для ввода числовых значений - `autoNumeric`. Это гарантирует нам
+единообразное поведение чисел во всей системе. Для элемента применяется директива `appNumeric` с указанием модели.
+
+```html
+<span app-numeric ng-model='bid'></span>
+```
+
+Так как `autoNumeric` умеет только рендерится в опеределенный элемент, то допустимо использование директивы только в качестве атрибута.
+
+Для конфигурации локали и валюты используется сервис `appNumericSettings`.
+
+```javascript
+appNumericSettings.locale('ru');
+appNumericSettings.currency('ruble');
+```
+
+Настройки можно перекрыть с помощью опций. Например, можно принудительно отключить знак валюты. Это используется в табличках.
+
+```html
+<td app-numeric="{aSign: ''}" ng-model='bid'></td>
+```
+
+В таком случае знак валюты выводится отдельно в заголовке с помощью директивы `appCurrencySign`.
+
+```html
+<th>Budget, <app-currency-sign/></th>
+```
 
 #### Отображение дат ####
 
-TODO
+Отображение дат происходит с помощью фильтра `amDateFormat` из [angular-moment](https://github.com/urish/angular-moment).
+
+Этот фильтр в большинстве случаев должен использоваться с форматом 'L' (локальная дата) или 'LT' (локальное время).
+
+Примеры.
+
+```html
+<span>{{c.startDate | amDateFormat:'L' }}</span>
+<div>{{c.updatedAt | amDateFormat:'LT' }}</div>
+```
+
+Конфигурация осуществляется через сервис `appMoment`.
+
+```javascript
+appMoment.lang('ru');
+```
 
 
 ### Автоинспекция кода ###
@@ -988,3 +1030,5 @@ grunt server
 Общие ошибки валиадции?
 
 Batch-запросы?
+
+Использовать микроюниты?

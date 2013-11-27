@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('campaigns.resources', ['common.resources', 'common.providers'])
+angular.module('campaigns.resources', ['lib.resources', 'lib.moment'])
     .factory('Campaign', function (appResource, appMoment) {
         return appResource('campaigns', function (self, data) {
             if (data.startDate) {

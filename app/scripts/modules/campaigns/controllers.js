@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('campaigns.controllers', ['common.validation', 'campaigns.resources'])
+angular.module('campaigns.controllers', ['lib.validation', 'campaigns.resources'])
     .controller('CampaignListController', function ($scope, $log, Campaign) {
         return Campaign.query({}, function (campaigns) {
             $log.debug(campaigns);

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('common.providers', [])
+angular.module('lib.moment', [])
     .factory('appMoment', function($window) {
         return $window.moment;
     });

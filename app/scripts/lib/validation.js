@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('common.validation', [])
+angular.module('lib.validation', [])
     .factory('appValidators', function () {
         var formatMessage = function (message, params) {
                 params = params || {};

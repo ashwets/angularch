@@ -10,7 +10,9 @@ angular.module('app', [
         'ui.select2',
         'ui.notify',
         'angularMoment',
-        'common.directives',
+        'lib.moment',
+        'lib.numeric',
+        'lib.format',
         'common.controllers',
         'campaigns.controllers'
     ])
@@ -61,4 +63,9 @@ angular.module('app', [
             });
 
         $urlRouterProvider.otherwise("/");
+    }).
+    run(function (appMoment, appNumericSettings) {
+        appMoment.lang('ru');
+        appNumericSettings.locale('ru');
+        appNumericSettings.currency('ruble');
     });
