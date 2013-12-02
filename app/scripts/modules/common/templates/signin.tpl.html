@@ -1,6 +1,6 @@
 <form class="form-horizontal" ng-submit="submit()">
-    <legend>Sign in</legend>
-    <input type="text" name="email" ng-model="auth.email" placeholder="Email" />
-    <input type="password" name="password" ng-model="auth.password" placeholder="Password" />
-    <input type="submit" value="Sign in" class="btn" />
+    <legend translate>Sign in</legend>
+    <input type="text" name="email" ng-model="auth.email" placeholder="{{'Email'|translate}}" />
+    <input type="password" name="password" ng-model="auth.password" placeholder="{{'Password'|translate}}" />
+    <input type="submit" value="{{'Sign in'|translate}}" class="btn" />
 </form>

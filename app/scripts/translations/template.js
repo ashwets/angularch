@@ -1,0 +1,4 @@
+angular.module("gettext").run(['gettextCatalog', function (gettextCatalog) {
+    gettextCatalog.setStrings('ru', {"#":"№","Budget":"Бюджет","Campaign editor":"Редактор кампании","Campaigns":"Кампании","Campaigns list":"Кампании","Cancel":"Отмена","Comment":"Комментарий","Create new":"Создать новую","Email":"Email","Hello, #username!":"Привет, #username!","Home":"Домой","Name":"Название","Network":"Сеть","Password":"Пароль","Regions":"Регионы","Save":"Сохранить","See your":"Посмотри свои","Select region":"Выберите регион","Sign in":"Войти","Start Date":"Дата старта","Start date":"Дата старта","campaigns":"кампании","create new one":"создай новую","or":"или"});
+
+}]);

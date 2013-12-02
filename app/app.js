@@ -3,6 +3,7 @@
 angular.module('app', [
         'routing',
         'mock',
+        'gettext',
         'ngCookies',
         'ngSanitize',
         'ngMockE2E',
@@ -17,8 +18,10 @@ angular.module('app', [
         'common.controllers',
         'campaigns.controllers'
     ])
-   .run(function (appMoment, appNumericSettings) {
+   .run(function (appMoment, appNumericSettings, gettextCatalog) {
         appMoment.lang('ru');
         appNumericSettings.locale('ru');
         appNumericSettings.currency('ruble');
+        gettextCatalog.currentLanguage = 'ru';
+        gettextCatalog.debug = true;
     });

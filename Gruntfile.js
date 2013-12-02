@@ -222,6 +222,21 @@ module.exports = function (grunt) {
           ]
         }
       }
+    },
+
+    nggettext_extract: {
+      pot: {
+        files: {
+          'translations/template.pot': ['<%= yeoman.app %>/**/*.html']
+        }
+      }
+    },
+    nggettext_compile: {
+      all: {
+        files: {
+          '<%= yeoman.app %>/scripts/translations/template.js': ['translations/**/template.po']
+        }
+      }
     }
   });
 

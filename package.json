@@ -26,6 +26,7 @@
     "grunt-ngmin": "~0.0.2",
     "grunt-karma": "latest",
     "grunt-angular-templates": "latest",
+    "grunt-angular-gettext": "latest",
     "time-grunt": "~0.1.0"
   },
   "engines": {
