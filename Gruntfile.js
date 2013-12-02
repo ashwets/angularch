@@ -18,10 +18,6 @@ module.exports = function (grunt) {
       dist: 'dist'
     },
     watch: {
-      styles: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.css'],
-        tasks: ['copy:styles', 'autoprefixer']
-      },
       livereload: {
         options: {
           livereload: '<%= connect.options.livereload %>'
@@ -34,20 +30,9 @@ module.exports = function (grunt) {
         ]
       }
     },
-    autoprefixer: {
-      options: ['last 1 version'],
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
-        }]
-      }
-    },
     connect: {
       options: {
-        port: 9002,
+        port: grunt.option('port') || 9002,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
         livereload: 35729
@@ -188,9 +173,10 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>',
           src: [
             '*.{ico,png,txt}',
-            'bower_components/**/*',
             'images/{,*/}*.{gif,webp}',
-            'styles/fonts/*'
+            'styles/fonts/*',
+            'styles/{,images/}*.{png,jpg,gif}',
+            '*.html'
           ]
         }, {
           expand: true,
@@ -200,37 +186,22 @@ module.exports = function (grunt) {
             'generated/*'
           ]
         }]
-      },
-      styles: {
-        expand: true,
-        cwd: '<%= yeoman.app %>/styles',
-        dest: '.tmp/styles/',
-        src: '{,*/}*.css'
       }
     },
-    concurrent: {
-      server: [
-        'copy:styles'
-      ],
-      test: [
-        'copy:styles'
-      ],
-      dist: [
-        'copy:styles',
-        'imagemin',
-        'svgmin',
-        'htmlmin'
-      ]
+    ngtemplates: {
+      app:        {
+        cwd: '<%= yeoman.app %>',
+        src: '**/templates/*.html',
+        dest: '.tmp/templates.js',
+        options: {
+          concat: '<%= yeoman.dist %>/scripts/scripts.js'
+        }
+      }
     },
     karma: {
       unit: {
         configFile: 'karma.conf.js',
         singleRun: true
-      }
-    },
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
       }
     },
     ngmin: {
@@ -261,34 +232,28 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'concurrent:server',
-      'autoprefixer',
       'connect:livereload',
       'watch'
     ]);
   });
 
-  grunt.registerTask('test', [
-    'clean:server',
-    'concurrent:test',
-    'autoprefixer',
-    'connect:test',
-    'karma'
-  ]);
-
   grunt.registerTask('build', [
     'clean:dist',
     'useminPrepare',
-    'concurrent:dist',
-    'autoprefixer',
+    'ngtemplates',
     'concat',
-    'copy:dist',
-    'cdnify',
     'ngmin',
-    //'cssmin',
-    'uglify',
+    'cssmin',
+    //'uglify',
     'rev',
+    'copy:dist',
     'usemin'
+  ]);
+
+  grunt.registerTask('test', [
+    'build',
+    'connect:test',
+    'karma'
   ]);
 
   grunt.registerTask('default', [

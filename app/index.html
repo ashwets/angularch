@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <!-- build:css(.tmp) styles/main.css -->
+    <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/bootstrap.css">
     <link rel="stylesheet" href="styles/main.css">
 
@@ -23,27 +23,16 @@
     <link rel="stylesheet" href="bower_components/select2/select2.css">
     <link rel="stylesheet" type="text/css" href="bower_components/pines-notify/jquery.pnotify.default.css" />
     <link rel="stylesheet" type="text/css" href="bower_components/pines-notify/jquery.pnotify.default.icons.css" />
-
     <!-- endbuild -->
 </head>
 <body ng-app="app">
-    <!--[if lt IE 7]>
-    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-        your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-    <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
-    <![endif]-->
-
     <!-- Add your site or application content here -->
     <div class="container">
         <div ui-view="navbar" class="navbar"></div>
-
         <div ui-view="main"></div>
     </div>
 
+    <!-- build:js scripts/lib.js -->
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/jquery-ui/ui/jquery-ui.js"></script>
@@ -53,6 +42,7 @@
     <script src="bower_components/moment/lang/ru.js"></script>
     <script src="bower_components/pines-notify/jquery.pnotify.js"></script>
     <script src="bower_components/angular/angular.js"></script>
+    <!-- endbuild -->
 
     <!-- build:js scripts/plugins.js -->
     <script src="bower_components/bootstrap-sass/js/affix.js"></script>
@@ -81,7 +71,7 @@
     <script src="bower_components/angular-pines-notify/src/pnotify.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <!-- build:js scripts/scripts.js -->
     <script src="app.js"></script>
     <script src="routing.js"></script>
     <script src="mock.js"></script>
@@ -96,5 +86,6 @@
     <script src="scripts/modules/campaigns/controllers.js"></script>
     <script src="scripts/modules/campaigns/resources.js"></script>
     <!-- endbuild -->
+
 </body>
 </html>
