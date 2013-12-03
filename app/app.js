@@ -5,7 +5,6 @@ angular.module('app', [
         'mock',
         'gettext',
         'ngCookies',
-        'ngSanitize',
         'ngMockE2E',
         'ui.date',
         'ui.select2',
