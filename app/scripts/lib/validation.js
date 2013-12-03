@@ -53,7 +53,7 @@ angular.module('lib.validation', [])
             },
             subscribe: function (fieldName, subscriber) {
                 if (!subscribers[fieldName]) {
-                    subscribers[fieldName] = []
+                    subscribers[fieldName] = [];
                 }
                 subscribers[fieldName].push(subscriber);
             }

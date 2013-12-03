@@ -28,7 +28,7 @@ angular.module('campaigns.controllers', ['lib.validation', 'campaigns.resources'
         return queryCampaigns();
     })
 
-    .factory('CampaignSaver', function ($state, $log, CampaignValidation, notificationService, appErrorsHandler) {
+    .factory('CampaignSaver', function ($state, $log, CampaignValidation, notificationService) {
         return {
             getValidation: function (scope) {
                 return CampaignValidation.get({}, function (validation) {

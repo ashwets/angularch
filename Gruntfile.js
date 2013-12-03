@@ -199,8 +199,12 @@ module.exports = function (grunt) {
       }
     },
     karma: {
-      unit: {
+      dev: {
         configFile: 'karma.conf.js',
+        singleRun: true
+      },
+      dist: {
+        configFile: 'karma-dist.conf.js',
         singleRun: true
       }
     },
@@ -265,10 +269,9 @@ module.exports = function (grunt) {
     'usemin'
   ]);
 
-  grunt.registerTask('test', [
+  grunt.registerTask('test:dist', [
     'build',
-    'connect:test',
-    'karma'
+    'karma:dist'
   ]);
 
   grunt.registerTask('default', [

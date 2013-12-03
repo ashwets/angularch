@@ -13,7 +13,7 @@ angular.module('app', [
         'angularMoment',
         'lib.moment',
         'lib.numeric',
-        'lib.format',
+        'lib.filters',
         'common.controllers',
         'campaigns.controllers'
     ])

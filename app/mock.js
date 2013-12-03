@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('mock', [])
-	.run(function($httpBackend, $log) {
+    .run(function($httpBackend, $log) {
 
         var mockCampaigns = {
                 111: {
@@ -42,7 +42,7 @@ angular.module('mock', [])
             },
             campaignGet = function (method, url, data, headers) {
                 var matches = url.match(/[0-9]+/),
-                    id = parseInt(matches[0]),
+                    id = parseInt(matches[0], 10),
                     res = angular.toJson({
                         "status": "success",
                         "data": mockCampaigns[id]
@@ -58,7 +58,7 @@ angular.module('mock', [])
                     errors.name = "Имя кампании обязательно";
                 }
                 if (data.budget < 1000) {
-                    errors.budget = "Минимальный бюджет кампании - 1000 рублей"
+                    errors.budget = "Минимальный бюджет кампании - 1000 рублей";
                 }
                 if (!_.isEmpty(errors)) {
                     return [400, angular.toJson({
@@ -116,14 +116,14 @@ angular.module('mock', [])
                 var s = v.split('=');
                 params[s[0]] = s[1];
             });
-            start = parseInt(params._page) * parseInt(params._perPage);
+            start = parseInt(params._page, 10) * parseInt(params._perPage, 10);
 
-            $log.debug(url, queryString, params, start, start + params._perPage);
+            $log.debug(url, queryString, params, start, start + params._perPage, 10);
 
             var values = _.values(mockCampaigns);
             return [200, angular.toJson({
                 "status": "success",
-                "data": values.slice(start, start + parseInt(params._perPage)),
+                "data": values.slice(start, start + parseInt(params._perPage, 10)),
                 "total": values.length
             })];
         });
