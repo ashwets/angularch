@@ -704,7 +704,9 @@ TODO: описать сервис пользователя
 
 В prod-режиме должны логироваться только сообщения уровня error и warning. Это может быть осуществлено за счет конфигурирования logProvider. Включение других логов на prod должно быть возможно с помощью куки `log_level`.
 
-TODO: подумать над использованием sentry с помощью raven-js.
+Для сбора исключений и прочих ошибок можно использовать [Sentry](https://github.com/getsentry/sentry).
+В JS оно интегрируется через [raven-js](https://github.com/getsentry/raven-js).
+Для ангуляра в свою очередь есть [angular-raven](https://github.com/gdi2290/angular-raven/blob/master/angular-raven.js).
 
 
 ### Unit-тестирование ###

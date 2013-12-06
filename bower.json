@@ -7,6 +7,7 @@
         "angular-gettext": "0.2.0",
         "angular-moment": "0.5.2",
         "angular-pines-notify": "0.0.1",
+        "angular-raven": "0.5.6",
         "angular-ui-bootstrap": "0.7.0",
         "angular-ui-date": "0.0.3",
         "angular-ui-router": "0.2.0",
@@ -17,6 +18,7 @@
         "jquery-ui": "1.10.3",
         "moment": "2.4.0",
         "pines-notify": "1.2.0",
+        "raven-js": "1.1.2",
         "select2": "3.4.5",
         "underscore": "1.5.2"
     },
