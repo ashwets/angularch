@@ -24,7 +24,7 @@ angular.module('app', [
         RavenProvider.development(appConfig.RAVEN_DEVELOPMENT);
     })
    .run(function (appMoment, appNumericSettings, gettextCatalog, appConfig, $window, $log) {
-        $log.info('Application running')
+        $log.info('Application running');
 
         if (!appConfig.RAVEN_DEVELOPMENT) {
             $window.Raven.config(appConfig.RAVEN_DSN, {}).install();
